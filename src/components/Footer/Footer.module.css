@@ -1,0 +1,26 @@
+.Footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0eeec;
+    padding: 40px 24px;
+    width: 100%;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.nuvem {
+    position: absolute;
+    left: 24px;
+}
+
+.nuvem img {
+    height: 50px;
+    object-fit: contain;
+}
+
+.texto {
+    color: #b0aaa8;
+    font-size: 14px;
+    text-align: center;
+}

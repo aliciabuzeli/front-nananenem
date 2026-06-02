@@ -1,0 +1,71 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    background: #ececec;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.editarbox {
+    width: 800px;
+    padding: 40px 60px;
+}
+
+.editarbox h1 {
+    text-align: center;
+    color: #005a96;
+    font-family: Georgia, serif;
+    font-size: 52px;
+    font-weight: bold;
+    margin-bottom: 60px;
+}
+
+.formgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 45px 60px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.campo input {
+    width: 100%;
+    height: 34px;
+    border: 1px solid #808080;
+    border-radius: 5px;
+    padding: 0 10px;
+    outline: none;
+}
+
+.btneditar {
+    display: block;
+    margin: 70px auto 0;
+    background: #8ccaf1;
+    color: #005a96;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 40px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btneditar:hover {
+    opacity: 0.9;
+}

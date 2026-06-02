@@ -3,6 +3,12 @@ import Header from "./components/Header/Header.jsx";
 import Login from "./pages/Login.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import DashboardAdm from "./pages/DashboardAdm.jsx";
+import DashboardVendedor from "./components/DashboardVendedor1/DashboardVendedor1.jsx";
+import Vendedor from "./components/Vendedor1/Vendedor1.jsx";
+import EditarCliente from "./components/EditarCliente1/EditarCliente1.jsx";
+import CadastroCliente from "./pages/CadastroCliente.jsx";
+import CadastroVendedor from "./pages/CadastroVendedor.jsx";
+import EdicaoVendedor from "./pages/EdicaoVendedor.jsx";
 
 export default function App() {
     return(
@@ -13,6 +19,13 @@ export default function App() {
 
                 <Route path="/" element={<Login/>} />
                 <Route path="/DashboardAdm" element={<DashboardAdm/>} />
+                <Route path="/DashboardVendedor" element={<DashboardVendedor/>} />
+                <Route path="/Vendedor" element={<Vendedor/>} />
+                <Route path="/EditarCliente" element={<EditarCliente/>} />
+                <Route path="/CadastroCliente" element={<CadastroCliente/>} />
+                <Route path="/CadastroVendedor" element={<CadastroVendedor/>} />
+                <Route path="/EdicaoVendedor" element={<EdicaoVendedor/>} />
+
 
             </Routes>
 

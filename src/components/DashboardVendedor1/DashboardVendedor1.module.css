@@ -1,0 +1,82 @@
+.container {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+/* MAIN */
+.main {
+    flex: 1;
+    padding: 40px;
+}
+
+.main h1 {
+    font-size: 32px;
+}
+
+.main span {
+    color: #f062b5;
+    font-weight: bold;
+}
+
+.main h2 {
+    margin-top: 20px;
+    font-size: 24px;
+}
+
+/* AÇÕES */
+.acoes {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.botao {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 300px;
+    padding: 12px;
+    border-radius: 20px;
+    border: 2px solid black;
+    background-color: #ffffff;
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.botao:hover {
+    background-color: #eaeaea;
+}
+
+/* CORES */
+.blue,
+.pink,
+.green,
+.yellow,
+.red {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+.blue {
+    background-color: #7ec8e3;
+}
+
+.pink {
+    background-color: #f062b5;
+}
+
+.green {
+    background-color: #1aa36f;
+}
+
+.yellow {
+    background-color: #f2c94c;
+}
+
+.red {
+    background-color: #e4572e;
+}

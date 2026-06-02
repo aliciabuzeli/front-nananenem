@@ -1,0 +1,72 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #ececec;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cadastro-box {
+    width: 800px;
+    padding: 40px 60px;
+}
+
+.cadastro-box h1 {
+    text-align: center;
+    color: #005a96;
+    font-size: 52px;
+    font-family: Georgia, serif;
+    margin-bottom: 60px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 45px 60px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.campo input {
+    width: 100%;
+    height: 34px;
+    border: 1px solid #7a7a7a;
+    border-radius: 5px;
+    padding: 0 10px;
+    background-color: white;
+    outline: none;
+}
+
+.btn-cadastrar {
+    display: block;
+    margin: 70px auto 0;
+    border: none;
+    background-color: #8ec9f0;
+    color: #005a96;
+    font-size: 18px;
+    padding: 10px 35px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-cadastrar:hover {
+    opacity: 0.9;
+}

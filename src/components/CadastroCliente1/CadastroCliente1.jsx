@@ -11,6 +11,7 @@ export default function CadastroCliente1() {
         endereco: '',
         email: '',
     })
+
     const [erro, setErro] = useState('')
     const [sucesso, setSucesso] = useState('')
     const [carregando, setCarregando] = useState(false)
@@ -31,6 +32,7 @@ export default function CadastroCliente1() {
         }
 
         setCarregando(true)
+
         try {
             const resposta = await fetch(`${API_URL}/cadastro_cliente`, {
                 method: 'POST',
@@ -38,7 +40,13 @@ export default function CadastroCliente1() {
                 body: JSON.stringify({ nome, telefone, cpf, endereco, email }),
             })
 
-            const dados = await resposta.json()
+            let dados = {}
+
+            try {
+                dados = await resposta.json()
+            } catch {
+                throw new Error('Resposta inválida do servidor')
+            }
 
             if (!resposta.ok) {
                 setErro(dados.error || 'Erro ao realizar cadastro.')
@@ -46,9 +54,16 @@ export default function CadastroCliente1() {
             }
 
             setSucesso('Cliente cadastrado com sucesso!')
-            setForm({ nome: '', telefone: '', cpf: '', endereco: '', email: '' })
+            setForm({
+                nome: '',
+                telefone: '',
+                cpf: '',
+                endereco: '',
+                email: ''
+            })
 
         } catch (e) {
+            console.error(e)
             setErro('Não foi possível conectar ao servidor.')
         } finally {
             setCarregando(false)

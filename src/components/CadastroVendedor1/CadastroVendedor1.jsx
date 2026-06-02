@@ -1,39 +1,202 @@
-import css from "./CadastroVendedor1.module.css";
+import { useState } from 'react'
+import css from './CadastroVendedor1.module.css'
+
+const API_URL = 'http://localhost:5000'
 
 export default function CadastroVendedor1() {
+    const [form, setForm] = useState({
+        nome: '',
+        telefone: '',
+        cpf: '',
+        email: '',
+        senha: '',
+        confirmar_senha: '',
+    })
+
+    const [imagem, setImagem] = useState(null)
+    const [erro, setErro] = useState('')
+    const [sucesso, setSucesso] = useState('')
+    const [carregando, setCarregando] = useState(false)
+
+    function handleChange(e) {
+        setForm({ ...form, [e.target.name]: e.target.value })
+    }
+
+    function handleImagem(e) {
+        setImagem(e.target.files[0] || null)
+    }
+
+    async function handleCadastrar() {
+        setErro('')
+        setSucesso('')
+
+        const { nome, telefone, cpf, email, senha, confirmar_senha } = form
+
+        if (!nome || !telefone || !cpf || !email || !senha || !confirmar_senha) {
+            setErro('Preencha todos os campos obrigatórios.')
+            return
+        }
+
+        if (senha !== confirmar_senha) {
+            setErro('As senhas não coincidem.')
+            return
+        }
+
+        // 🔥 Se estiver usando COOKIE no backend, NÃO precisa de token
+        const token = localStorage.getItem('access_token')
+
+        const formData = new FormData()
+        formData.append('nome', nome)
+        formData.append('telefone', telefone)
+        formData.append('cpf', cpf)
+        formData.append('email', email)
+        formData.append('senha', senha)
+        formData.append('confirmar_senha', confirmar_senha)
+
+        if (imagem) {
+            formData.append('imagem', imagem)
+        }
+
+        setCarregando(true)
+
+        try {
+            const resposta = await fetch(`${API_URL}/cadastro_vendedor`, {
+                method: 'POST',
+                headers: token
+                    ? { Authorization: `Bearer ${token}` }
+                    : {},
+                credentials: 'include', // 🔥 importante se usar cookie
+                body: formData,
+            })
+
+            let dados = {}
+
+            try {
+                dados = await resposta.json()
+            } catch {
+                dados = {}
+            }
+
+            if (!resposta.ok) {
+                if (resposta.status === 401) {
+                    setErro('Sessão expirada. Faça login novamente.')
+                } else {
+                    setErro(dados.error || 'Erro ao realizar cadastro.')
+                }
+                return
+            }
+
+            setSucesso('Vendedor cadastrado com sucesso!')
+
+            setForm({
+                nome: '',
+                telefone: '',
+                cpf: '',
+                email: '',
+                senha: '',
+                confirmar_senha: '',
+            })
+
+            setImagem(null)
+
+        } catch (err) {
+            console.error('Erro:', err) // 🔥 corrige ESLint
+            setErro('Não foi possível conectar ao servidor.')
+        } finally {
+            setCarregando(false)
+        }
+    }
+
     return (
         <div className={css.container}>
-
             <h1 className={css.h1}>Cadastro Vendedor</h1>
 
-            <form className={css.form}>
-
+            <div className={css.form}>
                 <div className={css.col}>
-                    <label>Nome</label>
-                    <input type={css.text} />
+                    <label className={css.label}>Nome</label>
+                    <input
+                        className={css.input}
+                        type="text"
+                        name="nome"
+                        value={form.nome}
+                        onChange={handleChange}
+                        disabled={carregando}
+                    />
 
-                    <label>Telefone</label>
-                    <input type={css.text} />
+                    <label className={css.label}>Telefone</label>
+                    <input
+                        className={css.input}
+                        type="text"
+                        name="telefone"
+                        value={form.telefone}
+                        onChange={handleChange}
+                        disabled={carregando}
+                    />
 
-                    <label>CPF</label>
-                    <input type={css.text} />
+                    <label className={css.label}>CPF</label>
+                    <input
+                        className={css.input}
+                        type="text"
+                        name="cpf"
+                        value={form.cpf}
+                        onChange={handleChange}
+                        disabled={carregando}
+                    />
+
+                    <label className={css.label}>Foto (opcional)</label>
+                    <input
+                        className={css.input}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImagem}
+                        disabled={carregando}
+                    />
                 </div>
 
                 <div className={css.col}>
-                    <label>E-mail</label>
-                    <input type={css.email} />
+                    <label className={css.label}>E-mail</label>
+                    <input
+                        className={css.input}
+                        type="email"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        disabled={carregando}
+                    />
 
-                    <label>Senha</label>
-                    <input type={css.password} />
+                    <label className={css.label}>Senha</label>
+                    <input
+                        className={css.input}
+                        type="password"
+                        name="senha"
+                        value={form.senha}
+                        onChange={handleChange}
+                        disabled={carregando}
+                        placeholder="Mín. 8 caracteres"
+                    />
 
-                    <label>Confirmar Senha</label>
-                    <input type={css.password} />
+                    <label className={css.label}>Confirmar Senha</label>
+                    <input
+                        className={css.input}
+                        type="password"
+                        name="confirmar_senha"
+                        value={form.confirmar_senha}
+                        onChange={handleChange}
+                        disabled={carregando}
+                    />
                 </div>
+            </div>
 
-            </form>
+            {erro && <p className={css.erro}>{erro}</p>}
+            {sucesso && <p className={css.sucesso}>{sucesso}</p>}
 
-            <button className={css.btn}>Cadastrar</button>
-
+            <button
+                className={css.btn}
+                onClick={handleCadastrar}
+                disabled={carregando}
+            >
+                {carregando ? 'Cadastrando...' : 'Cadastrar'}
+            </button>
         </div>
-    );
+    )
 }

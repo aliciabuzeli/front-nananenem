@@ -3,7 +3,6 @@ import css from './EdicaoVendedor1.module.css'
 
 const API_URL = 'http://127.0.0.1:5000'
 
-// Recebe o id_usuario via props; ex: <EdicaoVendedor1 idUsuario={3} />
 export default function EdicaoVendedor1({ idUsuario }) {
     const [form, setForm] = useState({
         nome: '',
@@ -37,24 +36,32 @@ export default function EdicaoVendedor1({ idUsuario }) {
             return
         }
 
-        const token = localStorage.getItem('access_token')
-        if (!token) {
-            setErro('Sessão expirada. Faça login novamente.')
-            return
-        }
-
         setCarregando(true)
+
         try {
+            const body = { nome, email, telefone, cpf }
+
+            if (senha) {
+                body.senha = senha
+                body.confirmar_senha = confirmar_senha
+            }
+
             const resposta = await fetch(`${API_URL}/editar_usuario/${idUsuario}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ nome, email, telefone, cpf, senha, confirmar_senha }),
+                credentials: 'include', // 🔥 IMPORTANTE
+                body: JSON.stringify(body),
             })
 
-            const dados = await resposta.json()
+            let dados = {}
+
+            try {
+                dados = await resposta.json()
+            } catch {
+                dados = {}
+            }
 
             if (!resposta.ok) {
                 if (resposta.status === 401) {
@@ -68,7 +75,7 @@ export default function EdicaoVendedor1({ idUsuario }) {
             setSucesso('Usuário atualizado com sucesso!')
             setForm(f => ({ ...f, senha: '', confirmar_senha: '' }))
 
-        } catch (e) {
+        } catch {
             setErro('Não foi possível conectar ao servidor.')
         } finally {
             setCarregando(false)

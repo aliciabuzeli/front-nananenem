@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import css from "./DashboardVendedor1.module.css";
 import SidebarVen from "../SidebarVen/SidebarVen.jsx";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "http://127.0.0.1:5000";
 
 async function apiFetch(path, options = {}) {
     const res = await fetch(`${API_BASE}${path}`, {
-        credentials: "include", // envia cookie access_token automaticamente
+        credentials: "include", // envia cookie a
+        // ss_token automaticamente
         ...options,
     });
     const data = await res.json();
@@ -128,9 +129,9 @@ export default function DashboardVendedor1() {
         setTimeout(() => setSucesso(null), 3500);
     }
 
-    useEffect(() => {
-        listarUsuarios();
-    }, []);
+    // useEffect(() => {
+    //     listarUsuarios();
+    // }, []);
 
     // ── Helpers de label ────────────────────────────────────────
     const tipoLabel = (t) => ({ 0: "Admin", 1: "Vendedor", 2: "Cliente" }[t] ?? "—");

@@ -1,13 +1,16 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import css from './Login1.module.css'
 
 const API_URL = 'http://127.0.0.1:5000'
 
 export default function Login() {
-    const [email, setEmail] = useState('')
-    const [senha, setSenha] = useState('')
-    const [erro, setErro] = useState('')
+    const [email, setEmail]           = useState('')
+    const [senha, setSenha]           = useState('')
+    const [erro, setErro]             = useState('')
     const [carregando, setCarregando] = useState(false)
+
+    const navigate = useNavigate()
 
     async function handleLogin() {
         setErro('')
@@ -23,7 +26,7 @@ export default function Login() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, senha }),
-                credentials: 'include' // 🔥 MUITO IMPORTANTE
+                credentials: 'include'
             })
 
             const dados = await resposta.json()
@@ -33,8 +36,22 @@ export default function Login() {
                 return
             }
 
-            // navigate('/dashboard')
-            alert('Login realizado com sucesso!')
+            // O backend devolve o token e seta o cookie access_token.
+            // O campo "tipo" vem dentro do payload do token,
+            // mas o backend também o expõe diretamente na resposta JSON.
+            // Decodificamos o payload (parte central do JWT) sem verificar
+            // assinatura — apenas para ler o tipo e redirecionar.
+            const token = dados.token
+            const payload = JSON.parse(atob(token.split('.')[1]))
+            const tipo = payload.tipo  // 0 = Admin | 1 = Vendedor
+
+            if (tipo === 0) {
+                navigate('/dashboard-adm')
+            } else if (tipo === 1) {
+                navigate('/dashboard-vendedor')
+            } else {
+                setErro('Tipo de usuário não autorizado.')
+            }
 
         } catch {
             setErro('Não foi possível conectar ao servidor.')
@@ -44,8 +61,7 @@ export default function Login() {
     }
 
     function handleEsqueciSenha() {
-        // Implemente a navegação para a tela de recuperação de senha
-        alert('Redirecionando para recuperação de senha...')
+        navigate('/esqueci-senha')
     }
 
     return (
@@ -72,7 +88,6 @@ export default function Login() {
                         type="password"
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
-                        placeholder="••••••••"
                         disabled={carregando}
                         onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
                     />

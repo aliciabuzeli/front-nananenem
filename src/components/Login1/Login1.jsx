@@ -36,19 +36,18 @@ export default function Login() {
                 return
             }
 
-            // O backend devolve o token e seta o cookie access_token.
-            // O campo "tipo" vem dentro do payload do token,
-            // mas o backend também o expõe diretamente na resposta JSON.
-            // Decodificamos o payload (parte central do JWT) sem verificar
-            // assinatura — apenas para ler o tipo e redirecionar.
             const token = dados.token
+
+            // Salva no localStorage para os componentes que usam Authorization header
+            localStorage.setItem('access_token', token)
+
             const payload = JSON.parse(atob(token.split('.')[1]))
             const tipo = payload.tipo  // 0 = Admin | 1 = Vendedor
 
             if (tipo === 0) {
-                navigate('/dashboard-adm')
+                navigate('/DashboardAdm')
             } else if (tipo === 1) {
-                navigate('/dashboard-vendedor')
+                navigate('/DashboardVendedor')
             } else {
                 setErro('Tipo de usuário não autorizado.')
             }

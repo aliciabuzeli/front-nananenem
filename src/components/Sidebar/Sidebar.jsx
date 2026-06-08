@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import css from "./Sidebar.module.css";
-import { apiFetch } from "../api/api.js";
 
 export default function Sidebar() {
     const [saindo, setSaindo] = useState(false);

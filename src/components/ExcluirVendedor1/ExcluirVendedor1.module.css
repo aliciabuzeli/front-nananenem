@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    min-height: 100vh;
+    background: #f0f4f8;
+    display: flex;
+    font-family: 'Nunito', sans-serif;
+}
+
+.conteudo {
+    flex: 1;
+    padding: 48px 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+}
+
+h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: #1a3a5c;
+    font-style: italic;
+}
+
+/* ── Grid de cards ── */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+    max-width: 860px;
+}
+
+/* ── Card ── */
+.card {
+    background: #d6eaf8;
+    border-radius: 16px;
+    padding: 24px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 10px rgba(31, 97, 141, 0.10);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(31, 97, 141, 0.16);
+}
+
+/* ── Avatar ── */
+.avatarWrap {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #aec6cf;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ── Info ── */
+.info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info p {
+    font-size: 13px;
+    color: #1a3a5c;
+    font-weight: 600;
+}
+
+.info p span {
+    font-weight: 800;
+}
+
+/* ── Botão excluir ── */
+.btnExcluir {
+    background: #5dade2;
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    padding: 9px 40px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    width: 100%;
+}
+
+.btnExcluir:hover {
+    background: #2e86c1;
+    transform: translateY(-1px);
+}
+
+/* ── Confirmação ── */
+.confirmar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.confirmar p {
+    font-size: 13px;
+    font-weight: 700;
+    color: #c0392b;
+}
+
+.confirmarBtns {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.btnSim {
+    flex: 1;
+    padding: 8px;
+    border-radius: 50px;
+    border: none;
+    background: #e74c3c;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btnSim:hover { background: #c0392b; }
+
+.btnNao {
+    flex: 1;
+    padding: 8px;
+    border-radius: 50px;
+    border: 1.5px solid #95a5a6;
+    background: transparent;
+    color: #7f8c8d;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btnNao:hover { background: #ecf0f1; }
+
+/* ── Mensagens ── */
+.erro {
+    color: #c0392b;
+    background: #fdf0ee;
+    border: 1px solid #f5c6c0;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.sucesso {
+    color: #1e8449;
+    background: #eafaf1;
+    border: 1px solid #a9dfbf;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.info {
+    color: #7f8c8d;
+    font-size: 15px;
+    font-style: italic;
+}

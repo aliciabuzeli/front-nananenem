@@ -9,6 +9,7 @@ import EditarCliente from "./components/EditarCliente1/EditarCliente1.jsx";
 import CadastroCliente from "./pages/CadastroCliente.jsx";
 import CadastroVendedor from "./pages/CadastroVendedor.jsx";
 import EdicaoVendedor from "./pages/EdicaoVendedor.jsx";
+import ExcluirVendedor from "./pages/ExcluirVendedor.jsx";
 
 export default function App() {
     return(
@@ -25,6 +26,7 @@ export default function App() {
                 <Route path="/CadastroCliente" element={<CadastroCliente/>} />
                 <Route path="/CadastroVendedor" element={<CadastroVendedor/>} />
                 <Route path="/EdicaoVendedor" element={<EdicaoVendedor/>} />
+                <Route path="/Excluir" element={<ExcluirVendedor/>} />
 
 
             </Routes>

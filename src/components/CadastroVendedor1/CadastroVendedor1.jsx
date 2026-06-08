@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import css from './CadastroVendedor1.module.css'
 
-const API_URL = 'http://localhost:5000'
+const API_URL = 'http://127.0.0.1:5000'
 
 export default function CadastroVendedor1() {
     const [form, setForm] = useState({

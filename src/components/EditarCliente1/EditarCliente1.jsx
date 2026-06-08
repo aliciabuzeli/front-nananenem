@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import css from './EditarCliente1.module.css'
 
-const API_URL = 'http://localhost:5000'
+const API_URL = 'http://127.0.0.1:5000'
 
 // Recebe o id do cliente via prop: <EditarCliente idUsuario={5} />
 export default function EditarCliente({ idUsuario }) {

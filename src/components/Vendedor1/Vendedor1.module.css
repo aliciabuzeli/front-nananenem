@@ -1,55 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
 }
 
 .container {
-    height: 100vh;
-    background: #dcdcdc;
+    min-height: 100vh;
+    background: #f0f4f8;
+    display: flex;
+    font-family: 'Nunito', sans-serif;
+}
+
+/* ── Conteúdo principal ── */
+.conteudo {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 60px;
+    gap: 40px;
 }
 
-/* Título */
-h1 {
-    margin-top: 40px;
-    color: #1f618d;
-    font-size: 40px;
-    font-weight: bold;
+.conteudo h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    color: #1a3a5c;
 }
 
-/* Botões */
+/* ── Botões ── */
 .buttons {
-    margin-top: 80px;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 20px;
+    width: 100%;
+    max-width: 320px;
 }
 
 .btn {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 30px;
-    border-radius: 25px;
-    border: 1px solid #555;
-    background: #f5f5f5;
+    gap: 14px;
+    padding: 14px 30px;
+    border-radius: 50px;
+    border: 1.5px solid #b0c4d8;
+    background: #ffffff;
     cursor: pointer;
-    font-size: 18px;
-    transition: 0.2s;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a3a5c;
+    box-shadow: 0 2px 10px rgba(31, 97, 141, 0.08);
+    transition: all 0.2s ease;
+    width: 100%;
 }
 
 .btn:hover {
-    background: #eaeaea;
+    background: #f0f7ff;
+    border-color: #1f618d;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(31, 97, 141, 0.15);
 }
 
-/* bolinha azul */
 .circle {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     background: #1f618d;
     border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.circleRed {
+    background: #e74c3c;
+}
+
+.btnDelete {
+    color: #c0392b;
+    border-color: #f5b7b1;
+}
+
+.btnDelete:hover {
+    background: #fdf2f2;
+    border-color: #e74c3c;
+}
+
+/* ── Mensagens ── */
+.erro {
+    color: #c0392b;
+    background: #fdf0ee;
+    border: 1px solid #f5c6c0;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.sucesso {
+    color: #1e8449;
+    background: #eafaf1;
+    border: 1px solid #a9dfbf;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
 }

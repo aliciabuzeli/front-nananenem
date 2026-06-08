@@ -33,8 +33,6 @@ export default function SidebarVen() {
                 onClick={handleLogout}
                 style={{ cursor: 'pointer', marginTop: 'auto' }}
             >
-                <span className={css.logout}></span>
-                <p>Sair</p>
             </div>
         </aside>
     )

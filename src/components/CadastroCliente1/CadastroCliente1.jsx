@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import css from './CadastroCliente1.module.css'
 
-const API_URL = 'http://127.0.0.1:5000'
+const API_URL = 'http://localhost:5000'
 
 export default function CadastroCliente1() {
     const [form, setForm] = useState({
@@ -39,6 +39,7 @@ export default function CadastroCliente1() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome, telefone, cpf, endereco, email }),
             })
+
 
             let dados = {}
 

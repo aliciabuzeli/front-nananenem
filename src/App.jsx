@@ -10,6 +10,7 @@ import CadastroCliente from "./pages/CadastroCliente.jsx";
 import CadastroVendedor from "./pages/CadastroVendedor.jsx";
 import EdicaoVendedor from "./pages/EdicaoVendedor.jsx";
 import ExcluirVendedor from "./pages/ExcluirVendedor.jsx";
+import EscolherVendedor from "./pages/EscolherVendedor.jsx";
 
 export default function App() {
     return(
@@ -27,6 +28,7 @@ export default function App() {
                 <Route path="/CadastroVendedor" element={<CadastroVendedor/>} />
                 <Route path="/EdicaoVendedor" element={<EdicaoVendedor/>} />
                 <Route path="/Excluir" element={<ExcluirVendedor/>} />
+                <Route path="/EscolherVendedor" element={<EscolherVendedor/>} />
 
 
             </Routes>

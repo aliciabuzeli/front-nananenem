@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import css from "./DashboardVendedor1.module.css";
+import css from "./EscolherVendedor1.module.css";
 import SidebarVen from "../SidebarVen/SidebarVen.jsx";
 
 export default function DashboardVendedor1() {
@@ -21,11 +21,16 @@ export default function DashboardVendedor1() {
     }, [])
 
     const acoes = [
-        { label: 'Cliente',  cor: css.blue,   href: '/CadastroCliente' },
-        { label: 'Produtos', cor: css.pink,   href: null },
-        { label: 'Coleções', cor: css.green,  href: null },
-        { label: 'Pedidos',  cor: css.yellow, href: null },
+        { label: 'Cliente',  cor: css.blue   },
+        { label: 'Produtos', cor: css.pink   },
+        { label: 'Coleções', cor: css.green  },
+        { label: 'Pedidos',  cor: css.yellow },
     ]
+
+    function mostrarSucesso(msg) {
+        setSucesso(msg);
+        setTimeout(() => setSucesso(null), 3500);
+    }
 
     return (
         <div className={css.container}>
@@ -36,17 +41,13 @@ export default function DashboardVendedor1() {
                     Olá, <span>{nomeVendedor || 'Vendedor'}!</span>
                 </h1>
 
-                {erro    && <div className={css.alerta}        role="alert">⚠ {erro}</div>}
+                {erro    && <div className={css.alerta}       role="alert">⚠ {erro}</div>}
                 {sucesso && <div className={css.alertaSucesso} role="status">✓ {sucesso}</div>}
 
                 <h2>Ações rápidas</h2>
                 <div className={css.acoes}>
                     {acoes.map(item => (
-                        <button
-                            key={item.label}
-                            className={css.botao}
-                            onClick={() => item.href && (window.location.href = item.href)}
-                        >
+                        <button key={item.label} className={css.botao}>
                             <span className={item.cor}></span>
                             {item.label}
                         </button>

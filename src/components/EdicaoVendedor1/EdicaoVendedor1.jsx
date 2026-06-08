@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import css from './EdicaoVendedor1.module.css'
 
 const API_URL = 'http://127.0.0.1:5000'
 
-export default function EdicaoVendedor1({ idUsuario }) {
+export default function EdicaoVendedor1() {
+    const { id } = useParams() // 🔥 pega o ID da URL
+
     const [form, setForm] = useState({
         nome: '',
         email: '',
@@ -12,13 +15,45 @@ export default function EdicaoVendedor1({ idUsuario }) {
         senha: '',
         confirmar_senha: '',
     })
+
     const [erro, setErro] = useState('')
     const [sucesso, setSucesso] = useState('')
     const [carregando, setCarregando] = useState(false)
 
+    const token = localStorage.getItem('access_token')
+
     function handleChange(e) {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
+
+    // 🔥 CARREGAR DADOS DO USUÁRIO
+    useEffect(() => {
+        async function carregar() {
+            try {
+                const res = await fetch(`${API_URL}/usuario/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+
+                const dados = await res.json()
+
+                if (res.ok) {
+                    setForm(f => ({
+                        ...f,
+                        nome: dados.NOME || '',
+                        email: dados.EMAIL || '',
+                        telefone: dados.TELEFONE || '',
+                        cpf: dados.CPF || '',
+                    }))
+                }
+            } catch {
+                setErro('Erro ao carregar dados')
+            }
+        }
+
+        if (id) carregar()
+    }, [id])
 
     async function handleEditar() {
         setErro('')
@@ -46,29 +81,19 @@ export default function EdicaoVendedor1({ idUsuario }) {
                 body.confirmar_senha = confirmar_senha
             }
 
-            const resposta = await fetch(`${API_URL}/editar_usuario/${idUsuario}`, {
+            const resposta = await fetch(`${API_URL}/editar_usuario/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // 🔥 FALTAVA ISSO
                 },
-                credentials: 'include', // 🔥 IMPORTANTE
                 body: JSON.stringify(body),
             })
 
-            let dados = {}
-
-            try {
-                dados = await resposta.json()
-            } catch {
-                dados = {}
-            }
+            const dados = await resposta.json()
 
             if (!resposta.ok) {
-                if (resposta.status === 401) {
-                    setErro('Sessão expirada. Faça login novamente.')
-                } else {
-                    setErro(dados.error || 'Erro ao atualizar usuário.')
-                }
+                setErro(dados.error || 'Erro ao atualizar usuário.')
                 return
             }
 
@@ -88,80 +113,32 @@ export default function EdicaoVendedor1({ idUsuario }) {
 
             <div className={css.form}>
                 <div className={css.col}>
-                    <label className={css.label}>Nome</label>
-                    <input
-                        className={css.input}
-                        type="text"
-                        name="nome"
-                        value={form.nome}
-                        onChange={handleChange}
-                        disabled={carregando}
-                    />
+                    <label>Nome</label>
+                    <input name="nome" value={form.nome} onChange={handleChange} />
 
-                    <label className={css.label}>Telefone</label>
-                    <input
-                        className={css.input}
-                        type="text"
-                        name="telefone"
-                        value={form.telefone}
-                        onChange={handleChange}
-                        disabled={carregando}
-                    />
+                    <label>Telefone</label>
+                    <input name="telefone" value={form.telefone} onChange={handleChange} />
 
-                    <label className={css.label}>CPF</label>
-                    <input
-                        className={css.input}
-                        type="text"
-                        name="cpf"
-                        value={form.cpf}
-                        onChange={handleChange}
-                        disabled={carregando}
-                    />
+                    <label>CPF</label>
+                    <input name="cpf" value={form.cpf} onChange={handleChange} />
                 </div>
 
                 <div className={css.col}>
-                    <label className={css.label}>E-mail</label>
-                    <input
-                        className={css.input}
-                        type="email"
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        disabled={carregando}
-                    />
+                    <label>Email</label>
+                    <input name="email" value={form.email} onChange={handleChange} />
 
-                    <label className={css.label}>Nova Senha</label>
-                    <input
-                        className={css.input}
-                        type="password"
-                        name="senha"
-                        value={form.senha}
-                        onChange={handleChange}
-                        disabled={carregando}
-                        placeholder="Deixe em branco para não alterar"
-                    />
+                    <label>Nova Senha</label>
+                    <input type="password" name="senha" value={form.senha} onChange={handleChange} />
 
-                    <label className={css.label}>Confirmar Senha</label>
-                    <input
-                        className={css.input}
-                        type="password"
-                        name="confirmar_senha"
-                        value={form.confirmar_senha}
-                        onChange={handleChange}
-                        disabled={carregando}
-                        placeholder="Deixe em branco para não alterar"
-                    />
+                    <label>Confirmar Senha</label>
+                    <input type="password" name="confirmar_senha" value={form.confirmar_senha} onChange={handleChange} />
                 </div>
             </div>
 
             {erro && <p className={css.erro}>{erro}</p>}
             {sucesso && <p className={css.sucesso}>{sucesso}</p>}
 
-            <button
-                className={css.btn}
-                onClick={handleEditar}
-                disabled={carregando}
-            >
+            <button onClick={handleEditar} disabled={carregando}>
                 {carregando ? 'Salvando...' : 'Editar'}
             </button>
         </div>

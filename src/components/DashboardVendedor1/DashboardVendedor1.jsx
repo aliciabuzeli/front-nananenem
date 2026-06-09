@@ -21,7 +21,7 @@ export default function DashboardVendedor1() {
     }, [])
 
     const acoes = [
-        { label: 'Cliente',  cor: css.blue,   href: '/CadastroCliente' },
+        { label: 'Cliente',  cor: css.blue,   href: '/Cliente' },
         { label: 'Produtos', cor: css.pink,   href: null },
         { label: 'Coleções', cor: css.green,  href: null },
         { label: 'Pedidos',  cor: css.yellow, href: null },

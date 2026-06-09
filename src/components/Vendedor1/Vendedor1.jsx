@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import css from './Vendedor1.module.css'
 import Sidebar from '../Sidebar/Sidebar.jsx'
 
-const API_URL = 'http://127.0.0.1:5000'
+const API_URL = 'http://localhost:5000'
 
 export default function Vendedor1() {
     const [vendedores, setVendedores] = useState([])
@@ -19,7 +19,7 @@ export default function Vendedor1() {
         setCarregando(true)
         try {
             const resposta = await fetch(`${API_URL}/`, {
-                headers: { 'Authorization': `Bearer ${token}` },
+               credentials: 'include'
             })
             const dados = await resposta.json()
             if (!resposta.ok) {

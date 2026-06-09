@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import css from './CadastroVendedor1.module.css'
 
-const API_URL = 'http://127.0.0.1:5000'
+const API_URL = 'http://localhost:5000'
 
 export default function CadastroVendedor1() {
     const [form, setForm] = useState({
@@ -19,7 +19,25 @@ export default function CadastroVendedor1() {
     const [carregando, setCarregando] = useState(false)
 
     function handleChange(e) {
-        setForm({ ...form, [e.target.name]: e.target.value })
+        const { name, value } = e.target
+
+        // 🔒 Validação de limite de caracteres e apenas números para CPF e Telefone
+        if (name === 'cpf') {
+            const apenasNumeros = value.replace(/\D/g, '') // Remove o que não for número
+            if (apenasNumeros.length > 11) return // Bloqueia se passar de 11 dígitos
+            setForm({ ...form, [name]: apenasNumeros })
+            return
+        }
+
+        if (name === 'telefone') {
+            const apenasNumeros = value.replace(/\D/g, '') // Remove o que não for número
+            if (apenasNumeros.length > 11) return // Bloqueia se passar de 11 dígitos (DDD + 9 dígitos)
+            setForm({ ...form, [name]: apenasNumeros })
+            return
+        }
+
+        // Comportamento normal para os outros campos
+        setForm({ ...form, [name]: value })
     }
 
     function handleImagem(e) {
@@ -42,7 +60,6 @@ export default function CadastroVendedor1() {
             return
         }
 
-        // 🔥 Se estiver usando COOKIE no backend, NÃO precisa de token
         const token = localStorage.getItem('access_token')
 
         const formData = new FormData()
@@ -65,7 +82,7 @@ export default function CadastroVendedor1() {
                 headers: token
                     ? { Authorization: `Bearer ${token}` }
                     : {},
-                credentials: 'include', // 🔥 importante se usar cookie
+                credentials: 'include',
                 body: formData,
             })
 
@@ -100,7 +117,7 @@ export default function CadastroVendedor1() {
             setImagem(null)
 
         } catch (err) {
-            console.error('Erro:', err) // 🔥 corrige ESLint
+            console.error('Erro:', err)
             setErro('Não foi possível conectar ao servidor.')
         } finally {
             setCarregando(false)
@@ -131,6 +148,8 @@ export default function CadastroVendedor1() {
                         value={form.telefone}
                         onChange={handleChange}
                         disabled={carregando}
+                        maxLength={11} // impede visualmente de digitar mais que 11 no HTML
+                        placeholder="Ex: 11999998888"
                     />
 
                     <label className={css.label}>CPF</label>
@@ -141,6 +160,8 @@ export default function CadastroVendedor1() {
                         value={form.cpf}
                         onChange={handleChange}
                         disabled={carregando}
+                        maxLength={11} // impede visualmente de digitar mais que 11 no HTML
+                        placeholder="Apenas números"
                     />
 
                     <label className={css.label}>Foto (opcional)</label>

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import css from './Login1.module.css'
 
-const API_URL = 'http://127.0.0.1:5000'
+const API_URL = 'http://localhost:5000'
 
 export default function Login() {
     const [email, setEmail]           = useState('')

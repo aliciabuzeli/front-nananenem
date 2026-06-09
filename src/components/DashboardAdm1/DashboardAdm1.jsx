@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import css from './DashboardAdm1.module.css'
 import Sidebar from '../Sidebar/Sidebar.jsx'
 
-const API_URL = 'http://127.0.0.1:5000'
+const API_URL = 'http://localhost:5000'
 
 // Função segura para ler o token
 function parseJwt(token) {

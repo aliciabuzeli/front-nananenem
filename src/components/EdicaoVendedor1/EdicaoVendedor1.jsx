@@ -1,146 +1,229 @@
-import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import css from './EdicaoVendedor1.module.css'
+import React, { useState, useEffect } from 'react';
+import css from './EdicaoVendedor1.module.css'; // 💡 Importado como objeto 'css'
 
-const API_URL = 'http://127.0.0.1:5000'
+export default function EdicaoVendedor() {
+    const [usuarios, setUsuarios] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-export default function EdicaoVendedor1() {
-    const { id } = useParams() // 🔥 pega o ID da URL
-
-    const [form, setForm] = useState({
+    // Estados para o controle do Modal de Edição
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [formData, setFormData] = useState({
         nome: '',
         email: '',
         telefone: '',
         cpf: '',
         senha: '',
         confirmar_senha: '',
-    })
+        imagem: null
+    });
 
-    const [erro, setErro] = useState('')
-    const [sucesso, setSucesso] = useState('')
-    const [carregando, setCarregando] = useState(false)
+    const [msgSucesso, setMsgSucesso] = useState('');
+    const [msgErroModal, setMsgErroModal] = useState('');
 
-    const token = localStorage.getItem('access_token')
-
-    function handleChange(e) {
-        setForm({ ...form, [e.target.name]: e.target.value })
-    }
-
-    // 🔥 CARREGAR DADOS DO USUÁRIO
+    // Busca a lista de usuários ao carregar a página
     useEffect(() => {
-        async function carregar() {
-            try {
-                const res = await fetch(`${API_URL}/usuario/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
+        fetchUsuarios();
+    }, []);
 
-                const dados = await res.json()
+    const fetchUsuarios = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch('http://localhost:5000/', {
+                method: 'GET',
+                credentials: 'include',
+            });
 
-                if (res.ok) {
-                    setForm(f => ({
-                        ...f,
-                        nome: dados.NOME || '',
-                        email: dados.EMAIL || '',
-                        telefone: dados.TELEFONE || '',
-                        cpf: dados.CPF || '',
-                    }))
-                }
-            } catch {
-                setErro('Erro ao carregar dados')
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Erro ao carregar os vendedores.');
             }
+
+            setUsuarios(data.usuarios || []);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
+    };
 
-        if (id) carregar()
-    }, [id])
+    const mapearUsuario = (userArray) => {
+        return {
+            id_usuario: userArray[0],
+            email: userArray[1],
+            cpf: userArray[2],
+            nome: userArray[3],
+            telefone: userArray[4]
+        };
+    };
 
-    async function handleEditar() {
-        setErro('')
-        setSucesso('')
+    const handleOpenModal = (userArray) => {
+        const user = mapearUsuario(userArray);
+        setSelectedUser(user);
+        setFormData({
+            nome: user.nome || '',
+            email: user.email || '',
+            telefone: user.telefone || '',
+            cpf: user.cpf || '',
+            senha: '',
+            confirmar_senha: '',
+            imagem: null
+        });
+        setMsgSucesso('');
+        setMsgErroModal('');
+    };
 
-        const { nome, email, telefone, cpf, senha, confirmar_senha } = form
+    const handleCloseModal = () => {
+        setSelectedUser(null);
+    };
 
-        if (!nome || !email) {
-            setErro('Nome e e-mail são obrigatórios.')
-            return
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleFileChange = (e) => {
+        setFormData({ ...formData, imagem: e.target.files[0] });
+    };
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        setMsgErroModal('');
+        setMsgSucesso('');
+
+        if (formData.senha !== formData.confirmar_senha) {
+            setMsgErroModal('As senhas digitadas não coincidem.');
+            return;
         }
-
-        if (senha && senha !== confirmar_senha) {
-            setErro('As senhas não coincidem.')
-            return
-        }
-
-        setCarregando(true)
 
         try {
-            const body = { nome, email, telefone, cpf }
-
-            if (senha) {
-                body.senha = senha
-                body.confirmar_senha = confirmar_senha
+            const dataToSend = new FormData();
+            dataToSend.append('nome', formData.nome);
+            dataToSend.append('email', formData.email);
+            dataToSend.append('telefone', formData.telefone);
+            dataToSend.append('cpf', formData.cpf);
+            dataToSend.append('senha', formData.senha);
+            dataToSend.append('confirmar_senha', formData.confirmar_senha);
+            if (formData.imagem) {
+                dataToSend.append('imagem', formData.imagem);
             }
 
-            const resposta = await fetch(`${API_URL}/editar_usuario/${id}`, {
+            const response = await fetch(`http://localhost:5000/editar_usuario/${selectedUser.id_usuario}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // 🔥 FALTAVA ISSO
-                },
-                body: JSON.stringify(body),
-            })
+                credentials: 'include',
+                body: dataToSend
+            });
 
-            const dados = await resposta.json()
+            const data = await response.json();
 
-            if (!resposta.ok) {
-                setErro(dados.error || 'Erro ao atualizar usuário.')
-                return
+            if (!response.ok) {
+                throw new Error(data.error || data.message || 'Erro ao atualizar dados.');
             }
 
-            setSucesso('Usuário atualizado com sucesso!')
-            setForm(f => ({ ...f, senha: '', confirmar_senha: '' }))
+            setMsgSucesso('Vendedor atualizado com sucesso!');
+            fetchUsuarios();
 
-        } catch {
-            setErro('Não foi possível conectar ao servidor.')
-        } finally {
-            setCarregando(false)
+            setTimeout(() => handleCloseModal(), 1500);
+        } catch (err) {
+            setMsgErroModal(err.message);
         }
-    }
+    };
 
     return (
-        <div className={css.container}>
-            <h1 className={css.titulo}>Edição Vendedor</h1>
+        <div className={css.editarVendedorContainer}>
+            <h1 className={css.mainTitle}>Editar Vendedor</h1>
 
-            <div className={css.form}>
-                <div className={css.col}>
-                    <label>Nome</label>
-                    <input name="nome" value={form.nome} onChange={handleChange} />
+            {loading && <p className={css.statusText}>Carregando vendedores...</p>}
+            {error && <p className={`${css.statusText} ${css.errorText}`}>Erro: {error}</p>}
 
-                    <label>Telefone</label>
-                    <input name="telefone" value={form.telefone} onChange={handleChange} />
+            {!loading && !error && (
+                <div className={css.vendedoresGrid}>
+                    {usuarios.map((userArray, index) => {
+                        const user = mapearUsuario(userArray);
+                        return (
+                            <div key={user.id_usuario || index} className={css.vendedorCard}>
+                                <div className={css.avatarContainer}>
+                                    <div className={css.avatarPlaceholder}>
+                                        <svg viewBox="0 0 24 24" className={css.avatarIcon}>
+                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-3-8-3z" />
+                                        </svg>
+                                    </div>
+                                </div>
 
-                    <label>CPF</label>
-                    <input name="cpf" value={form.cpf} onChange={handleChange} />
+                                <div className={css.vendedorInfo}>
+                                    <p><strong>Nome:</strong> {user.nome}</p>
+                                    <p><strong>Telefone:</strong> {user.telefone}</p>
+                                    <p><strong>CPF:</strong> {user.cpf}</p>
+                                    <p><strong>E-mail:</strong> {user.email}</p>
+                                </div>
+
+                                <button className={css.btnEditar} onClick={() => handleOpenModal(userArray)}>
+                                    Editar
+                                </button>
+                            </div>
+                        );
+                    })}
                 </div>
+            )}
 
-                <div className={css.col}>
-                    <label>Email</label>
-                    <input name="email" value={form.email} onChange={handleChange} />
+            {/* Modal Suspenso para Formulário de Edição */}
+            {selectedUser && (
+                <div className={css.modalOverlay}>
+                    <div className={css.modalContent}>
+                        <h2>Editar Cadastro</h2>
+                        <form onSubmit={handleFormSubmit} className={css.editForm}>
 
-                    <label>Nova Senha</label>
-                    <input type="password" name="senha" value={form.senha} onChange={handleChange} />
+                            <div className={css.formGroup}>
+                                <label>Nome:</label>
+                                <input type="text" name="nome" value={formData.nome} onChange={handleInputChange} required />
+                            </div>
 
-                    <label>Confirmar Senha</label>
-                    <input type="password" name="confirmar_senha" value={form.confirmar_senha} onChange={handleChange} />
+                            <div className={css.formGroup}>
+                                <label>E-mail:</label>
+                                <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
+                            </div>
+
+                            <div className={css.formGroup}>
+                                <label>Telefone:</label>
+                                <input type="text" name="telefone" value={formData.telefone} onChange={handleInputChange} />
+                            </div>
+
+                            <div className={css.formGroup}>
+                                <label>CPF:</label>
+                                <input type="text" name="cpf" value={formData.cpf} onChange={handleInputChange} />
+                            </div>
+
+                            <div className={css.formGroup}>
+                                <label>Nova Senha:</label>
+                                <input type="password" name="senha" value={formData.senha} onChange={handleInputChange} placeholder="Mínimo de 8 caracteres" required />
+                            </div>
+
+                            <div className={css.formGroup}>
+                                <label>Confirmar Senha:</label>
+                                <input type="password" name="confirmar_senha" value={formData.confirmar_senha} onChange={handleInputChange} required />
+                            </div>
+
+                            <div className={css.formGroup}>
+                                <label>Foto do Vendedor (Opcional):</label>
+                                <input type="file" accept="image/*" onChange={handleFileChange} />
+                            </div>
+
+                            {msgErroModal && <p className={`${css.modalMsg} ${css.errorMsg}`}>{msgErroModal}</p>}
+                            {msgSucesso && <p className={`${css.modalMsg} ${css.successMsg}`}>{msgSucesso}</p>}
+
+                            <div className={css.modalActions}>
+                                <button type="button" className={css.btnCancelar} onClick={handleCloseModal}>
+                                    Cancelar
+                                </button>
+                                <button type="submit" className={css.btnSalvar}>
+                                    Salvar Alterações
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-
-            {erro && <p className={css.erro}>{erro}</p>}
-            {sucesso && <p className={css.sucesso}>{sucesso}</p>}
-
-            <button onClick={handleEditar} disabled={carregando}>
-                {carregando ? 'Salvando...' : 'Editar'}
-            </button>
+            )}
         </div>
-    )
+    );
 }
